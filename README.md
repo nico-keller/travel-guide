@@ -7,4 +7,4 @@ Enjoy!
 To run the backend just run the app.py script on your IDE.
 
 ## Run frontend
-run npm start on frontend directory on your terminal
+run npm install on frontend directory on your terminal and then start frontend with npm start
