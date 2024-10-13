@@ -1,0 +1,43 @@
+# .github/workflows/ci.yml
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    name: Frontend Build and Test
+    steps:
+    - uses: actions/checkout@v2
+
+    # Set up Node.js
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+
+    - run: cd frontend && npm install
+    - run: cd frontend && npm run build
+    - run: cd frontend && npm test
+
+  backend:
+    runs-on: ubuntu-latest
+    name: Backend Build and Test
+    steps:
+    - uses: actions/checkout@v2
+
+    # Set up Python
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.10'
+
+    # Install dependencies and run tests
+    - run: cd backend && pip install -r requirements.txt
+    - run: cd backend && pytest
