@@ -1,0 +1,22 @@
+# .github/workflows/lint-backend.yml
+name: Lint Backend
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.10'
+
+    - run: cd backend && pip install flake8
+    - run: cd backend && flake8 .
