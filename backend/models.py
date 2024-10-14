@@ -6,3 +6,5 @@ class TravelPlan(db.Model):
     description = db.Column(db.Text, nullable=False)
     location = db.Column(db.String(100), nullable=False)
     itinerary = db.Column(db.JSON, nullable=False)  # Stores the travel plan
+    likes = db.Column(db.Integer, default=0)
+    dislikes = db.Column(db.Integer, default=0)

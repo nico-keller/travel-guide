@@ -15,7 +15,9 @@ def configure_routes(app):
             'title': plan.title,
             'description': plan.description,
             'location': plan.location,
-            'itinerary': plan.itinerary
+            'itinerary': plan.itinerary,
+            'likes': plan.likes,
+            'dislikes': plan.dislikes
         } for plan in plans])
 
     @app.route('/api/plans/<int:id>', methods=['GET'])
@@ -28,7 +30,9 @@ def configure_routes(app):
             'title': plan.title,
             'description': plan.description,
             'location': plan.location,
-            'itinerary': plan.itinerary
+            'itinerary': plan.itinerary,
+            'likes': plan.likes,
+            'dislikes': plan.dislikes
         })
 
     @app.route('/api/plans', methods=['POST'])
@@ -69,11 +73,43 @@ def configure_routes(app):
                 'title': new_plan.title,
                 'description': new_plan.description,
                 'location': new_plan.location,
-                'itinerary': new_plan.itinerary
+                'itinerary': new_plan.itinerary,
             }), 201
         except Exception as e:
             # Log the exception for debugging
             app.logger.error(f"Error creating travel plan: {e}")
             return jsonify({'error': 'Failed to create travel plan'}), 500
+
+    @app.route('/api/plans/<int:id>/like', methods=['POST'])
+    def like_plan(id):
+        plan = TravelPlan.query.get(id)
+        if not plan:
+            return jsonify({'error': 'Plan not found'}), 404
+
+        # Increment the likes count
+        plan.likes += 1
+        db.session.commit()
+
+        return jsonify({
+            'id': plan.id,
+            'likes': plan.likes,
+            'dislikes': plan.dislikes
+        }), 200
+
+    @app.route('/api/plans/<int:id>/dislike', methods=['POST'])
+    def dislike_plan(id):
+        plan = TravelPlan.query.get(id)
+        if not plan:
+            return jsonify({'error': 'Plan not found'}), 404
+
+        # Increment the dislikes count
+        plan.dislikes += 1
+        db.session.commit()
+
+        return jsonify({
+            'id': plan.id,
+            'likes': plan.likes,
+            'dislikes': plan.dislikes
+        }), 200
 
 
