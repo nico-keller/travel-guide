@@ -1,6 +1,13 @@
 from flask import request, jsonify
 from models import db, TravelPlan
 from ai_module import generate_itinerary, generate_image
+from serpapi import GoogleSearch
+import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+
 
 def configure_routes(app):
     @app.route('/', methods=['GET'])
@@ -130,6 +137,45 @@ def configure_routes(app):
             return jsonify({'image_url': image_url}), 200
         else:
             return jsonify({'error': 'Failed to generate image'}), 500
+
+
+    @app.route('/api/flights', methods=['POST'])
+    def get_flights():
+        try:
+            # Retrieve API key
+            api_key = os.getenv("FLIGHTS_API_KEY")
+            if not api_key:
+                return jsonify({"error": "FLIGHTS_API_KEY is not set in environment variables"}), 500
+
+            # Get the data from the request
+            data = request.json
+            departure_id = data.get('departure_id')
+            arrival_id = data.get('arrival_id')
+            outbound_date = data.get('outbound_date')
+            return_date = data.get('return_date')
+            currency = data.get('currency', 'USD')  # Default to USD
+
+            # Set up the parameters for the API call
+            params = {
+                "engine": "google_flights",
+                "departure_id": departure_id,
+                "arrival_id": arrival_id,
+                "outbound_date": outbound_date,
+                "return_date": return_date,
+                "currency": currency,
+                "hl": "en",
+                "api_key": api_key
+            }
+
+            # Perform the search using SerpAPI
+            search = GoogleSearch(params)
+            results = search.get_dict()
+
+            return jsonify(results), 200
+
+        except Exception as e:
+            print(f"Error occurred: {e}")
+            return jsonify({"error": "Failed to fetch flight details"}), 500
 
 
 
