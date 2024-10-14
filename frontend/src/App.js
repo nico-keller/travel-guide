@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import PlanDetails from './pages/PlanDetails';
 import CreatePlan from './pages/CreatePlan'; // Import the CreatePlan component
+import ImageGenerator from "./pages/ImageGenerator";
 
 function App() {
     return (
@@ -14,7 +15,8 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Home/>}/>
                     <Route path="/plans/:id" element={<PlanDetails/>}/>
-                    <Route path="/create" element={<CreatePlan/>}/> {/* New route */}
+                    <Route path="/create" element={<CreatePlan/>}/>
+                    <Route path="/generate-image" element={<ImageGenerator />} />
                 </Routes>
             </div>
         </Router>

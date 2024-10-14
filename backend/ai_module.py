@@ -2,6 +2,7 @@ import os
 import openai
 from openai import OpenAI
 from dotenv import load_dotenv
+
 # Load environment variables
 load_dotenv()
 
@@ -15,7 +16,6 @@ client = OpenAI(api_key=api_key)
 def generate_itinerary(location, preferences):
     try:
         prompt = f"Create a travel itinerary for a trip to {location} considering the following preferences: {preferences}"
-        # Use the new client.chat.completions.create method
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
@@ -23,11 +23,25 @@ def generate_itinerary(location, preferences):
                 {"role": "user", "content": prompt}
             ]
         )
-        # Extract the generated content
         itinerary = response.choices[0].message.content
         return itinerary
     except Exception as e:
         print(e)
+        return "Error generating itinerary."
 
-
+def generate_image(prompt):
+    try:
+        response = client.images.generate(
+            model="dall-e-3",
+            prompt=prompt,
+            size="1024x1024",
+            quality="standard",
+            n=1,
+        )
+        # Get the URL of the generated image
+        image_url = response.data[0].url
+        return image_url
+    except Exception as e:
+        print(f"Error generating image: {e}")
+        return None
 

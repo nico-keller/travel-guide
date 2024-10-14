@@ -6,7 +6,8 @@ function Navbar() {
         <nav>
             <ul>
                 <li><Link to="/">Home</Link></li>
-                <li><Link to="/create">Create Plan</Link></li> {/* Add this link */}
+                <li><Link to="/create">Create Plan</Link></li>{/* Add this link */}
+                <li><Link to="/generate-image">Create Travel Images</Link></li>
             </ul>
         </nav>
     );

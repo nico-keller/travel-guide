@@ -1,6 +1,6 @@
 from flask import request, jsonify
 from models import db, TravelPlan
-from ai_module import generate_itinerary
+from ai_module import generate_itinerary, generate_image
 
 def configure_routes(app):
     @app.route('/', methods=['GET'])
@@ -116,5 +116,20 @@ def configure_routes(app):
             'likes': plan.likes,
             'dislikes': plan.dislikes
         }), 200
+
+    @app.route('/api/generate_image', methods=['POST'])
+    def generate_image_api():
+        data = request.json
+        if 'prompt' not in data:
+            return jsonify({'error': 'No prompt provided'}), 400
+
+        prompt = data['prompt']
+        image_url = generate_image(prompt)
+
+        if image_url:
+            return jsonify({'image_url': image_url}), 200
+        else:
+            return jsonify({'error': 'Failed to generate image'}), 500
+
 
 
