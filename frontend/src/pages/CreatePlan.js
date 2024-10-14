@@ -82,6 +82,7 @@ function CreatePlan() {
                     <p><strong>Title:</strong> {createdPlan.title}</p>
                     <p><strong>Description:</strong> {createdPlan.description}</p>
                     <p><strong>Location:</strong> {createdPlan.location}</p>
+                    <p><strong>Preferences:</strong> {createdPlan.preferences}</p>
                     <h3>Itinerary:</h3>
                     <pre>{createdPlan.itinerary}</pre>
                 </div>

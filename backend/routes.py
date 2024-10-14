@@ -16,6 +16,7 @@ def configure_routes(app):
             'description': plan.description,
             'location': plan.location,
             'itinerary': plan.itinerary,
+            'preferences': plan.preferences,
             'likes': plan.likes,
             'dislikes': plan.dislikes
         } for plan in plans])
@@ -31,6 +32,7 @@ def configure_routes(app):
             'description': plan.description,
             'location': plan.location,
             'itinerary': plan.itinerary,
+            'preferences': plan.preferences,
             'likes': plan.likes,
             'dislikes': plan.dislikes
         })
@@ -60,7 +62,8 @@ def configure_routes(app):
                 title=data['title'],
                 description=data['description'],
                 location=location,
-                itinerary=itinerary
+                itinerary=itinerary,
+                preferences=preferences
             )
 
             # Save to the database
@@ -74,6 +77,8 @@ def configure_routes(app):
                 'description': new_plan.description,
                 'location': new_plan.location,
                 'itinerary': new_plan.itinerary,
+                'preferences': new_plan.preferences
+
             }), 201
         except Exception as e:
             # Log the exception for debugging
