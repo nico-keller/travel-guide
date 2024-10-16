@@ -13,9 +13,10 @@ if not api_key:
 
 client = OpenAI(api_key=api_key)
 
-def generate_itinerary(location, preferences):
+def generate_itinerary(title, description, location, preferences):
     try:
-        prompt = f"Create a travel itinerary for a trip to {location} considering the following preferences: {preferences}"
+        prompt = (f"{title} Short travel plan description: {description}. Create a travel itinerary for this trip to {location}."
+                  f" Consider the following preferences when creating the travel plan: {preferences}")
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[

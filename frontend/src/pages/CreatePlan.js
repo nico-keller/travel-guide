@@ -7,7 +7,8 @@ function CreatePlan() {
     const [location, setLocation] = useState('');
     const [preferences, setPreferences] = useState('');
     const [message, setMessage] = useState('');
-    const [createdPlan, setCreatedPlan] = useState(null); // State to store the created plan
+    const [createdPlan, setCreatedPlan] = useState(null);
+    const [imageUrl, setImageUrl] = useState(null); // State for the generated image URL
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -22,6 +23,7 @@ function CreatePlan() {
             const response = await createTravelPlan(newPlan);
             setMessage('Travel plan created successfully!');
             setCreatedPlan(response.data); // Store the created plan data
+            setImageUrl(response.data.image_url); // Store the generated image URL
             // Clear the form fields
             setTitle('');
             setDescription('');
@@ -85,6 +87,14 @@ function CreatePlan() {
                     <p><strong>Preferences:</strong> {createdPlan.preferences}</p>
                     <h3>Itinerary:</h3>
                     <pre>{createdPlan.itinerary}</pre>
+                </div>
+            )}
+
+            {/* Display the generated image if available */}
+            {imageUrl && (
+                <div>
+                    <h2>Generated Image</h2>
+                    <img src={imageUrl} alt="Generated AI" style={{ maxWidth: '100%' }} />
                 </div>
             )}
         </div>

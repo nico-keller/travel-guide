@@ -57,17 +57,23 @@ def configure_routes(app):
                 if field not in data:
                     return jsonify({'error': f'Missing field: {field}'}), 400
 
+            title = data['title']
+            description = data['description']
             location = data['location']
             preferences = data['preferences']
-            itinerary = generate_itinerary(location, preferences)
+            itinerary = generate_itinerary(title, description, location, preferences)
 
             # Ensure itinerary is a string
             if not isinstance(itinerary, str):
                 itinerary = str(itinerary)
 
+            # Generate the image based on the travel plan description
+            image_prompt = f"A beautiful scene at {location}. Description: {description}"
+            image_url = generate_image(image_prompt)
+
             new_plan = TravelPlan(
-                title=data['title'],
-                description=data['description'],
+                title=title,
+                description=description,
                 location=location,
                 itinerary=itinerary,
                 preferences=preferences
@@ -84,7 +90,8 @@ def configure_routes(app):
                 'description': new_plan.description,
                 'location': new_plan.location,
                 'itinerary': new_plan.itinerary,
-                'preferences': new_plan.preferences
+                'preferences': new_plan.preferences,
+                'image_url': image_url
 
             }), 201
         except Exception as e:
