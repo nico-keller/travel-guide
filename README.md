@@ -75,5 +75,49 @@ The frontend is built using React and Axios to interact with the Flask backend. 
 4. **Run the flask server**
    ```bash
    flask run
+
+### Frontend Setup
+1. **Navigate to frontend directory:**
+   ```bash
+   cd ../frontend
+3. **Install Node.js dependencies**
+   ```bash
+   npm install
+5. **Run the react app:**
+   ```bash
+   npm start
+
+## Usage
+
+### Create Travel Plans:
+1. Navigate to the **"Create Plan"** page.
+2. Fill in the required details such as title, description, location, and preferences.
+3. Submit the form to generate a personalized itinerary and a corresponding AI-generated image for the travel plan.
+
+### Search Flights:
+1. Use the **Flight Search** feature by entering the departure and arrival airports along with your outbound and return dates.
+2. The app will display available flights with relevant details such as price, airline, duration, and a link to book the flight.
+
+### Generate AI Images:
+1. After creating a travel plan, the application automatically generates an AI-based image based on the travel plan description.
+2. This image is displayed as the background of the travel plan page, enhancing the visual appeal.
+
+## Technologies Used
+
+- **Frontend**: React, Axios
+- **Backend**: Flask, SQLAlchemy, OpenAI API (GPT-3.5 & DALL·E), SerpAPI (Google Flights)
+- **AI Models**: GPT-3.5 (for text generation) and DALL·E (for image generation)
+
+## License
+
+This project is licensed under the MIT License.
+
+## Acknowledgments
+
+- **OpenAI** for providing the GPT-3.5 and DALL·E models.
+- **SerpAPI** for flight search integration using Google Flights.
+
+By following this guide, you will be able to run and deploy the Travel Guide Web Application locally or online. For any issues, feel free to open a GitHub issue!
+
    
  
