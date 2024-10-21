@@ -24,6 +24,7 @@ def configure_routes(app):
             'location': plan.location,
             'itinerary': plan.itinerary,
             'preferences': plan.preferences,
+            'location_details': plan.location_details,
             'likes': plan.likes,
             'dislikes': plan.dislikes
         } for plan in plans])
@@ -40,6 +41,7 @@ def configure_routes(app):
             'location': plan.location,
             'itinerary': plan.itinerary,
             'preferences': plan.preferences,
+            'location_details': plan.location_details,
             'likes': plan.likes,
             'dislikes': plan.dislikes
         })
@@ -62,13 +64,13 @@ def configure_routes(app):
             location = data['location']
             preferences = data['preferences']
             itinerary = generate_itinerary(title, description, location, preferences)
-            loc_details = generate_loc_details(location)
+            location_details = generate_loc_details(location)
 
             # Ensure itinerary is a string
             if not isinstance(itinerary, str):
                 itinerary = str(itinerary)
-            if not isinstance(loc_details, str):
-                loc_details = str(loc_details)
+            if not isinstance(location_details, str):
+                location_details = str(location_details)
 
             # Generate the image based on the travel plan description
             image_prompt = f"A beautiful scene at {location}. Description: {description}"
@@ -80,7 +82,7 @@ def configure_routes(app):
                 location=location,
                 itinerary=itinerary,
                 preferences=preferences,
-                location_details=loc_details,
+                location_details=location_details
             )
 
             # Save to the database
@@ -96,7 +98,7 @@ def configure_routes(app):
                 'itinerary': new_plan.itinerary,
                 'preferences': new_plan.preferences,
                 'image_url': image_url,
-                'location_details': loc_details
+                'location_details': new_plan.location_details
 
             }), 201
         except Exception as e:

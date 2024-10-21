@@ -35,6 +35,13 @@ function CreatePlan() {
         }
     };
 
+    const renderJsonData = (data) => {
+        if (typeof data === 'object') {
+            return <pre>{JSON.stringify(data, null, 2)}</pre>;
+        }
+        return <pre>{data}</pre>;
+    };
+
     return (
         <div>
             <h1>Create a New Travel Plan</h1>
@@ -86,9 +93,9 @@ function CreatePlan() {
                     <p><strong>Location:</strong> {createdPlan.location}</p>
                     <p><strong>Preferences:</strong> {createdPlan.preferences}</p>
                     <h3>Details:</h3>
-                    <pre>{createdPlan.location_details}</pre>
+                    {renderJsonData(createdPlan.location_details)}
                     <h3>Itinerary:</h3>
-                    <pre>{createdPlan.itinerary}</pre>
+                    {renderJsonData(createdPlan.itinerary)}
                 </div>
             )}
 
