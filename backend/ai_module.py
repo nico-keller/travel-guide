@@ -46,3 +46,26 @@ def generate_image(prompt):
         print(f"Error generating image: {e}")
         return None
 
+def generate_loc_details(location):
+    try:
+        prompt = (f"Provide detailed travel information for {location}, including: "
+                  f"\n- Currency used "
+                  f"\n- Official languages spoken "
+                  f"\n- Time zone "
+                  f"\n- Best methods of transportation "
+                  f"\n- Capital city "
+                  f"\n- Currency conversion from 1 Swiss Franc "
+                  f"\nProvide the information as bullet points.")
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a helpful travel assistant."},
+                {"role": "user", "content": prompt}
+            ]
+        )
+        itinerary = response.choices[0].message.content
+        return itinerary
+    except Exception as e:
+        print(e)
+        return "Error generating itinerary."
+

@@ -36,6 +36,8 @@ function PlanDetails() {
             <p><strong>Trip description:</strong> {plan.description}</p>
             <p><strong>Location:</strong> {plan.location}</p>
             <p><strong>Preferences:</strong> {plan.preferences}</p>
+            <h3>Details:</h3>
+            <pre>{plan.location_details}</pre>
             <h3>Itinerary:</h3>
             <div>
                 {plan.itinerary.split('\n').map((line, index) => (

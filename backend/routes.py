@@ -1,6 +1,6 @@
 from flask import request, jsonify
 from models import db, TravelPlan
-from ai_module import generate_itinerary, generate_image
+from ai_module import generate_itinerary, generate_image, generate_loc_details
 from serpapi import GoogleSearch
 import os
 from dotenv import load_dotenv
@@ -62,10 +62,13 @@ def configure_routes(app):
             location = data['location']
             preferences = data['preferences']
             itinerary = generate_itinerary(title, description, location, preferences)
+            loc_details = generate_loc_details(location)
 
             # Ensure itinerary is a string
             if not isinstance(itinerary, str):
                 itinerary = str(itinerary)
+            if not isinstance(loc_details, str):
+                loc_details = str(loc_details)
 
             # Generate the image based on the travel plan description
             image_prompt = f"A beautiful scene at {location}. Description: {description}"
@@ -76,7 +79,8 @@ def configure_routes(app):
                 description=description,
                 location=location,
                 itinerary=itinerary,
-                preferences=preferences
+                preferences=preferences,
+                location_details=loc_details,
             )
 
             # Save to the database
@@ -91,7 +95,8 @@ def configure_routes(app):
                 'location': new_plan.location,
                 'itinerary': new_plan.itinerary,
                 'preferences': new_plan.preferences,
-                'image_url': image_url
+                'image_url': image_url,
+                'location_details': loc_details
 
             }), 201
         except Exception as e:

@@ -9,3 +9,4 @@ class TravelPlan(db.Model):
     preferences = db.Column(db.String(100), nullable=True)
     likes = db.Column(db.Integer, default=0)
     dislikes = db.Column(db.Integer, default=0)
+    location_details = db.Column(db.JSON, nullable=False)
