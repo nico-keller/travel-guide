@@ -58,6 +58,11 @@ function PlanDetails() {
                     <p>No itinerary available</p>
                 )}
             </div>
+            {plan.image_url && (
+                <div>
+                    <img src={plan.image_url} alt="Generated AI" style={{ maxWidth: '100%' }} />
+                </div>
+            )}
         </div>
     );
 }

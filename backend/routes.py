@@ -26,7 +26,8 @@ def configure_routes(app):
             'preferences': plan.preferences,
             'location_details': plan.location_details,
             'likes': plan.likes,
-            'dislikes': plan.dislikes
+            'dislikes': plan.dislikes,
+            'image_url': plan.image_url
         } for plan in plans])
 
     @app.route('/api/plans/<int:id>', methods=['GET'])
@@ -43,7 +44,8 @@ def configure_routes(app):
             'preferences': plan.preferences,
             'location_details': plan.location_details,
             'likes': plan.likes,
-            'dislikes': plan.dislikes
+            'dislikes': plan.dislikes,
+            'image_url': plan.image_url
         })
 
     @app.route('/api/plans', methods=['POST'])
@@ -82,7 +84,8 @@ def configure_routes(app):
                 location=location,
                 itinerary=itinerary,
                 preferences=preferences,
-                location_details=location_details
+                location_details=location_details,
+                image_url=image_url
             )
 
             # Save to the database
@@ -97,7 +100,7 @@ def configure_routes(app):
                 'location': new_plan.location,
                 'itinerary': new_plan.itinerary,
                 'preferences': new_plan.preferences,
-                'image_url': image_url,
+                'image_url': new_plan.image_url,
                 'location_details': new_plan.location_details
 
             }), 201
