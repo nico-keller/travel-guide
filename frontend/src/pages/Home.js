@@ -1,25 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getTravelPlans, likePlan, dislikePlan } from '../services/apiService';
+import SearchBar from '../components/SearchBar';
+import SkeletonCard from '../components/SkeletonCard';
+import '../styles/Home.css';
 
 function Home() {
     const [plans, setPlans] = useState([]);
-    const [sortOption, setSortOption] = useState('');  // Add state for sorting option
+    const [loading, setLoading] = useState(true);
+    const [sortOption, setSortOption] = useState('');
+    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         getTravelPlans()
             .then(response => {
                 setPlans(response.data);
+                setLoading(false);
             })
-            .catch(error => console.error(error));
+            .catch(error => {
+                console.error(error);
+                setLoading(false);
+            });
     }, []);
-
-    // Function to sort plans alphabetically by title
-    const sortAlphabetically = () => {
-        const sortedPlans = [...plans].sort((a, b) => a.title.localeCompare(b.title));
-        setPlans(sortedPlans);
-    };
-
 
     const handleLike = (id) => {
         likePlan(id)
@@ -41,38 +43,76 @@ function Home() {
             .catch(error => console.error(error));
     };
 
-    // Handle sorting selection change
+    const sortAlphabetically = () => {
+        const sortedPlans = [...plans].sort((a, b) => a.title.localeCompare(b.title));
+        setPlans(sortedPlans);
+    };
+
     const handleSortChange = (e) => {
         setSortOption(e.target.value);
-
         if (e.target.value === 'alphabetical') {
             sortAlphabetically();
         }
     };
 
     return (
-        <div>
-            <h1>Travel Plans</h1>
-            <div>
-                <label htmlFor="sort">Sort By:</label>
-                <select id="sort" value={sortOption} onChange={handleSortChange}>
-                    <option value="">Select an option</option>
-                    <option value="alphabetical">Alphabetically</option>
-                </select>
+        <div className="home-container">
+            <h1 className="page-title">Travel Plans</h1>
+            
+            <div className="controls-container">
+                <SearchBar 
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                
+                <div className="sort-container">
+                    <div className="sort-wrapper">
+                        <span className="sort-icon">🔄</span>
+                        <select 
+                            id="sort" 
+                            value={sortOption} 
+                            onChange={handleSortChange}
+                            className="sort-select"
+                        >
+                            <option value="">Sort By</option>
+                            <option value="alphabetical">A-Z</option>
+                        </select>
+                    </div>
+                </div>
             </div>
-            <ul>
-                {plans.map(plan => (
-                    <li key={plan.id}>
-                        <Link to={`/plans/${plan.id}`}>{plan.title}</Link>
-                        <p><strong>Location:</strong> {plan.location}</p>
-                        <div>
-                            <button onClick={() => handleLike(plan.id)}>Like</button>
-                            <button onClick={() => handleDislike(plan.id)}>Dislike</button>
-                            <p>Likes: {plan.likes} | Dislikes: {plan.dislikes}</p>
+
+            <div className="plans-grid">
+                {loading ? (
+                    Array(6).fill().map((_, index) => (
+                        <SkeletonCard key={index} />
+                    ))
+                ) : (
+                    plans.map(plan => (
+                        <div key={plan.id} className="plan-card">
+                            <Link to={`/plans/${plan.id}`} className="plan-title">
+                                {plan.title}
+                            </Link>
+                            <p className="plan-location">
+                                <span className="label">Location:</span> {plan.location}
+                            </p>
+                            <div className="interaction-buttons">
+                                <button 
+                                    onClick={() => handleLike(plan.id)}
+                                    className="btn btn-like"
+                                >
+                                    <span>👍 {plan.likes}</span>
+                                </button>
+                                <button 
+                                    onClick={() => handleDislike(plan.id)}
+                                    className="btn btn-dislike"
+                                >
+                                    <span>👎 {plan.dislikes}</span>
+                                </button>
+                            </div>
                         </div>
-                    </li>
-                ))}
-            </ul>
+                    ))
+                )}
+            </div>
         </div>
     );
 }

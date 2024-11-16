@@ -1,0 +1,284 @@
+:root {
+    --primary-color: #FF6B6B;
+    --secondary-color: #4ECDC4;
+    --dark-color: #2C363F;
+    --light-color: #F7F7F7;
+    --gradient: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --radius: 8px;
+}
+
+.home-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: var(--light-color);
+}
+
+.controls-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 0 20px;
+}
+
+.page-title {
+    color: var(--dark-color);
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 3rem;
+    position: relative;
+    padding-bottom: 15px;
+}
+
+.page-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 4px;
+    background: var(--gradient);
+    border-radius: 2px;
+}
+
+.sort-container {
+    margin-left: 20px;
+}
+
+.sort-wrapper {
+    display: inline-flex;
+    align-items: center;
+    background: white;
+    border-radius: 30px;
+    padding: 8px 16px;
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.sort-wrapper:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    border-color: var(--secondary-color);
+}
+
+.sort-icon {
+    margin-right: 10px;
+    font-size: 1.2rem;
+    color: var(--secondary-color);
+    animation: rotate 15s linear infinite;
+}
+
+.sort-select {
+    background: transparent;
+    border: none;
+    font-size: 1rem;
+    color: var(--dark-color);
+    cursor: pointer;
+    padding: 5px 10px;
+    outline: none;
+    font-weight: 500;
+    min-width: 120px;
+}
+
+.sort-select option {
+    background: white;
+    color: var(--dark-color);
+    padding: 10px;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.plans-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    padding: 20px;
+}
+
+.plan-card {
+    background-color: white;
+    border-radius: var(--radius);
+    padding: 25px;
+    box-shadow: var(--shadow);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+}
+
+.plan-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: var(--gradient);
+}
+
+.plan-card:hover {
+    transform: translateY(-10px) rotateX(5deg);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.plan-title {
+    color: var(--dark-color);
+    text-decoration: none;
+    font-size: 1.4rem;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 15px;
+    transition: color 0.3s ease;
+}
+
+.plan-title:hover {
+    color: var(--primary-color);
+    transform: translateX(5px);
+}
+
+.plan-location {
+    color: #666;
+    margin: 15px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.interaction-buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 600;
+    color: white;
+}
+
+.btn-like {
+    background-color: var(--secondary-color);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-like::after {
+    content: '👍';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.btn-like:active::after {
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 1;
+}
+
+.btn-like span {
+    transition: transform 0.3s ease;
+}
+
+.btn-like:active span {
+    transform: scale(0.8);
+}
+
+.btn-dislike {
+    background-color: var(--primary-color);
+}
+
+.btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Loading animation */
+@keyframes shimmer {
+    0% { background-position: -468px 0 }
+    100% { background-position: 468px 0 }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .controls-container {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .sort-container {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .sort-wrapper {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .plans-grid {
+        grid-template-columns: 1fr;
+        padding: 10px;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .home-container {
+        background-color: var(--dark-color);
+    }
+
+    .page-title {
+        color: var(--light-color);
+    }
+
+    .plan-card {
+        background-color: #3a4750;
+    }
+
+    .plan-title {
+        color: var(--light-color);
+    }
+
+    .plan-location {
+        color: #ddd;
+    }
+
+    .label {
+        color: var(--secondary-color);
+    }
+
+    .sort-wrapper {
+        background: #3a4750;
+    }
+    
+    .sort-select {
+        color: var(--light-color);
+    }
+    
+    .sort-select option {
+        background: #3a4750;
+        color: var(--light-color);
+    }
+} 
