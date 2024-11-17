@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { createTravelPlan } from '../services/apiService';
+import '../styles/SharedStyles.css';
 
 function CreatePlan() {
     const [title, setTitle] = useState('');
@@ -43,67 +44,89 @@ function CreatePlan() {
     };
 
     return (
-        <div>
-            <h1>Create a New Travel Plan</h1>
-            {message && <p>{message}</p>}
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Title:</label>
-                    <input
-                        type="text"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Description:</label>
-                    <textarea
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Location:</label>
-                    <input
-                        type="text"
-                        value={location}
-                        onChange={(e) => setLocation(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Preferences:</label>
-                    <input
-                        type="text"
-                        value={preferences}
-                        onChange={(e) => setPreferences(e.target.value)}
-                    />
-                </div>
-                <button type="submit">Create Travel Plan</button>
-            </form>
-
-            {/* Display the created plan if available */}
-            {createdPlan && (
-                <div>
-                    <h2>Created Travel Plan</h2>
-                    <p><strong>Title:</strong> {createdPlan.title}</p>
-                    <p><strong>Description:</strong> {createdPlan.description}</p>
-                    <p><strong>Location:</strong> {createdPlan.location}</p>
-                    <p><strong>Preferences:</strong> {createdPlan.preferences}</p>
-                    <h3>Details:</h3>
-                    {renderJsonData(createdPlan.location_details)}
-                    <h3>Itinerary:</h3>
-                    {renderJsonData(createdPlan.itinerary)}
+        <div className="page-container">
+            <h1 className="page-title">Create a New Travel Plan</h1>
+            
+            {message && (
+                <div className={`message ${message.includes('success') ? 'success' : 'error'}`}>
+                    {message}
                 </div>
             )}
 
-            {/* Display the generated image if available */}
+            <div className="form-container">
+                <form onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <label className="form-label">Title</label>
+                        <input
+                            type="text"
+                            className="form-input"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label className="form-label">Description</label>
+                        <textarea
+                            className="form-textarea"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label className="form-label">Location</label>
+                        <input
+                            type="text"
+                            className="form-input"
+                            value={location}
+                            onChange={(e) => setLocation(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label className="form-label">Preferences</label>
+                        <input
+                            type="text"
+                            className="form-input"
+                            value={preferences}
+                            onChange={(e) => setPreferences(e.target.value)}
+                        />
+                    </div>
+
+                    <button type="submit" className="btn">Create Travel Plan</button>
+                </form>
+            </div>
+
+            {createdPlan && (
+                <div className="card">
+                    <h2>Created Travel Plan</h2>
+                    <div className="plan-details">
+                        <p><strong>Title:</strong> {createdPlan.title}</p>
+                        <p><strong>Description:</strong> {createdPlan.description}</p>
+                        <p><strong>Location:</strong> {createdPlan.location}</p>
+                        <p><strong>Preferences:</strong> {createdPlan.preferences}</p>
+                        
+                        <h3>Details:</h3>
+                        <div className="details-section">
+                            {renderJsonData(createdPlan.location_details)}
+                        </div>
+                        
+                        <h3>Itinerary:</h3>
+                        <div className="details-section">
+                            {renderJsonData(createdPlan.itinerary)}
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {imageUrl && (
-                <div>
+                <div className="card">
                     <h2>Generated Image</h2>
-                    <img src={imageUrl} alt="Generated AI" style={{ maxWidth: '100%' }} />
+                    <img src={imageUrl} alt="Generated AI" style={{ maxWidth: '100%', borderRadius: 'var(--radius)' }} />
                 </div>
             )}
         </div>
