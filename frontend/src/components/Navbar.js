@@ -1,14 +1,41 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import '../styles/Navbar.css';
 
 function Navbar() {
+    const [isOpen, setIsOpen] = useState(false);
+
     return (
-        <nav>
-            <ul>
-                <li><Link to="/">Home</Link></li>
-                <li><Link to="/create">Create Plan</Link></li>{/* Add this link */}
-                <li><Link to="/generate-image">Create Travel Images</Link></li>
-                <li><Link to="/search-flights">Book flights</Link> </li>
+        <nav className="navbar">
+            <Link to="/" className="nav-brand">
+                🏠 Home
+            </Link>
+            
+            <button 
+                className={`mobile-menu-btn ${isOpen ? 'open' : ''}`}
+                onClick={() => setIsOpen(!isOpen)}
+            >
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <ul className={`nav-links ${isOpen ? 'active' : ''}`}>
+                <li>
+                    <Link to="/create" className="nav-link">
+                        ✏️ Create Plan
+                    </Link>
+                </li>
+                <li>
+                    <Link to="/generate-image" className="nav-link">
+                        🎨 Travel Images
+                    </Link>
+                </li>
+                <li>
+                    <Link to="/search-flights" className="nav-link">
+                        ✈️ Book Flights
+                    </Link>
+                </li>
             </ul>
         </nav>
     );
