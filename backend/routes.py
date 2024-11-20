@@ -30,7 +30,7 @@ def configure_routes(app):
             'image_url': plan.image_url
         } for plan in plans])
 
-    @app.route('/api/plans/<int:id>', methods=['GET'])
+    @app.route('/api/plans/<id>', methods=['GET'])
     def get_plan_by_id(id):
         plan = TravelPlan.query.get(id)
         if not plan:
