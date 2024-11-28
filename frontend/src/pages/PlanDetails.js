@@ -4,11 +4,13 @@ import axios from 'axios';
 import '../styles/SharedStyles.css';
 
 const API_BASE_URL = 'http://127.0.0.1:5000'
+const WEATHER_API_KEY = 'YOUR_WEATHER_API_KEY';
 
 function PlanDetails() {
     const { id } = useParams();
     const [plan, setPlan] = useState(null);
     const [error, setError] = useState(null);
+    const [weather, setWeather] = useState(null);
 
     useEffect(() => {
         axios.get(`${API_BASE_URL}/api/plans/${id}`)
@@ -20,6 +22,18 @@ function PlanDetails() {
                 setError('Failed to load travel plan details.');
             });
     }, [id]);
+
+    useEffect(() => {
+        if (plan && plan.location) {
+            axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${plan.location}&units=metric&appid=${WEATHER_API_KEY}`)
+                .then(response => {
+                    setWeather(response.data);
+                })
+                .catch(error => {
+                    console.error('Weather fetch error:', error);
+                });
+        }
+    }, [plan]);
 
     if (error) {
         return <div className="page-container">
@@ -57,12 +71,20 @@ function PlanDetails() {
                 <div className="card plan-details">
                     <h2 className="section-title">Location Details</h2>
                     <div className="details-content">
+                        {weather && (
+                            <div className="weather-info">
+                                <h3>Current Weather</h3>
+                                <p>Temperature: {Math.round(weather.main.temp)}°C</p>
+                                <p>Conditions: {weather.weather[0].description}</p>
+                                <p>Humidity: {weather.main.humidity}%</p>
+                            </div>
+                        )}
                         {plan.location_details ? (
                             plan.location_details.split('\n').map((line, index) => (
                                 <p key={index}>{line}</p>
                             ))
                         ) : (
-                            <p className="no-content">No location details available</p>
+                            <p className="no-content"></p>
                         )}
                     </div>
                 </div>

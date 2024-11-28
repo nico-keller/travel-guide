@@ -365,4 +365,30 @@
     .no-content {
         color: #999;
     }
+}
+
+.weather-info {
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.weather-info h3 {
+    color: var(--secondary-color);
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+}
+
+.weather-info p {
+    margin: 8px 0;
+    color: inherit;
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
+/* Add dark mode support */
+@media (prefers-color-scheme: dark) {
+    .weather-info h3 {
+        color: var(--secondary-color);
+    }
 } 
