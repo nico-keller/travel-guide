@@ -1,9 +1,10 @@
 from flask import request, jsonify
-from models import db, TravelPlan
+from models import db, TravelPlan, Comment
 from ai_module import generate_itinerary, generate_image, generate_loc_details
 from serpapi import GoogleSearch
 import os
 from dotenv import load_dotenv
+from datetime import datetime
 
 # Load environment variables
 load_dotenv()
@@ -193,6 +194,39 @@ def configure_routes(app):
         except Exception as e:
             print(f"Error occurred: {e}")
             return jsonify({"error": "Failed to fetch flight details"}), 500
+
+    @app.route('/api/plans/<int:plan_id>/comments', methods=['GET'])
+    def get_comments(plan_id):
+        comments = Comment.query.filter_by(travel_plan_id=plan_id)\
+            .order_by(Comment.created_at.desc()).all()
+        return jsonify([{
+            'id': comment.id,
+            'content': comment.content,
+            'author': comment.author,
+            'created_at': comment.created_at.isoformat(),
+        } for comment in comments])
+
+    @app.route('/api/plans/<int:plan_id>/comments', methods=['POST'])
+    def add_comment(plan_id):
+        data = request.json
+        if not data or 'content' not in data or 'author' not in data:
+            return jsonify({'error': 'Missing required fields'}), 400
+
+        new_comment = Comment(
+            content=data['content'],
+            author=data['author'],
+            travel_plan_id=plan_id,
+            created_at=datetime.utcnow()
+        )
+        db.session.add(new_comment)
+        db.session.commit()
+
+        return jsonify({
+            'id': new_comment.id,
+            'content': new_comment.content,
+            'author': new_comment.author,
+            'created_at': new_comment.created_at.isoformat()
+        }), 201
 
 
 

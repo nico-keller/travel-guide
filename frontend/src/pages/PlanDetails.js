@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/SharedStyles.css';
+import CommentSection from '../components/CommentSection';
 
 const API_BASE_URL = 'http://127.0.0.1:5000'
-const WEATHER_API_KEY = 'YOUR_WEATHER_API_KEY';
+const WEATHER_API_KEY = 'YOUR_API_KEY_HERE';
 
 function PlanDetails() {
     const { id } = useParams();
@@ -113,6 +114,7 @@ function PlanDetails() {
                     </div>
                 )}
             </div>
+            <CommentSection planId={id} />
         </div>
     );
 }
