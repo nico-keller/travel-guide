@@ -83,7 +83,12 @@ function Home() {
             sortLocation();
         }
     };
-    
+
+    const filteredPlans = plans.filter(plan =>
+        plan.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        plan.location.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
         <div className="home-container">
             <h1 className="page-title">Travel Plans</h1>
@@ -95,19 +100,15 @@ function Home() {
                 />
                 
                 <div className="sort-container">
-                    <div className="sort-wrapper">
-                        <span className="sort-icon">🔄</span>
-                        <select 
-                            id="sort" 
-                            value={sortOption} 
-                            onChange={handleSortChange}
-                            className="sort-select"
-                        >
-                            <option value="">Sort By</option>
-                            <option value="alphabetical">A-Z</option>
-                            <option value="location">Location</option> {/* New Option */}
-                        </select>
-                    </div>
+                    <select 
+                        value={sortOption} 
+                        onChange={handleSortChange}
+                        className="sort-select"
+                    >
+                        <option value="">🔄 Sort By </option>
+                        <option value="alphabetical">A-Z</option>
+                        <option value="location">Location</option>
+                    </select>
                 </div>
             </div>
 
@@ -117,7 +118,7 @@ function Home() {
                         <SkeletonCard key={index} />
                     ))
                 ) : (
-                    plans.map(plan => (
+                    filteredPlans.map(plan => (
                         <div key={plan.id} className="plan-card">
                             <Link to={`/plans/${plan.id}`} className="plan-title">
                                 {plan.title}

@@ -45,7 +45,18 @@
 }
 
 .sort-container {
-    margin-left: 20px;
+    position: relative;
+}
+
+.sort-container::after {
+    content: '▼';
+    font-size: 12px;
+    color: #666;
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
 }
 
 .sort-wrapper {
@@ -72,21 +83,18 @@
 }
 
 .sort-select {
-    background: transparent;
-    border: none;
-    font-size: 1rem;
-    color: var(--dark-color);
+    padding: 8px 12px;
+    font-size: 16px;
     cursor: pointer;
-    padding: 5px 10px;
-    outline: none;
-    font-weight: 500;
-    min-width: 120px;
+    border: none;
+    background: transparent;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
 }
 
-.sort-select option {
-    background: white;
-    color: var(--dark-color);
-    padding: 10px;
+.sort-select:focus {
+    outline: none;
 }
 
 @keyframes rotate {
