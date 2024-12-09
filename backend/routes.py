@@ -28,7 +28,8 @@ def configure_routes(app):
             'location_details': plan.location_details,
             'likes': plan.likes,
             'dislikes': plan.dislikes,
-            'image_url': plan.image_url
+            'image_url': plan.image_url,
+            'length': plan.length  # Include length in the response
         } for plan in plans])
 
     @app.route('/api/plans/<id>', methods=['GET'])
@@ -46,7 +47,8 @@ def configure_routes(app):
             'location_details': plan.location_details,
             'likes': plan.likes,
             'dislikes': plan.dislikes,
-            'image_url': plan.image_url
+            'image_url': plan.image_url,
+            'length': plan.length  # Include length in the response
         })
 
     @app.route('/api/plans', methods=['POST'])
@@ -57,7 +59,7 @@ def configure_routes(app):
                 return jsonify({'error': 'No data provided'}), 400
 
             # Check if all required fields are present
-            required_fields = ['title', 'description', 'location', 'preferences']
+            required_fields = ['title', 'description', 'location', 'preferences', 'length']
             for field in required_fields:
                 if field not in data:
                     return jsonify({'error': f'Missing field: {field}'}), 400
@@ -66,7 +68,8 @@ def configure_routes(app):
             description = data['description']
             location = data['location']
             preferences = data['preferences']
-            itinerary = generate_itinerary(title, description, location, preferences)
+            length = data['length']
+            itinerary = generate_itinerary(title, description, location, preferences, length)
             location_details = generate_loc_details(location)
 
             # Ensure itinerary is a string
@@ -86,7 +89,8 @@ def configure_routes(app):
                 itinerary=itinerary,
                 preferences=preferences,
                 location_details=location_details,
-                image_url=image_url
+                image_url=image_url,
+                length=length
             )
 
             # Save to the database
@@ -102,8 +106,8 @@ def configure_routes(app):
                 'itinerary': new_plan.itinerary,
                 'preferences': new_plan.preferences,
                 'image_url': new_plan.image_url,
-                'location_details': new_plan.location_details
-
+                'location_details': new_plan.location_details,
+                'length': new_plan.length
             }), 201
         except Exception as e:
             # Log the exception for debugging

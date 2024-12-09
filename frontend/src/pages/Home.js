@@ -126,6 +126,9 @@ function Home() {
                             <p className="plan-location">
                                 <span className="label">Location:</span> {plan.location}
                             </p>
+                            <p className="plan-length">
+                                <span className="label">Length:</span> {plan.length} days
+                            </p>
                             <div className="interaction-buttons">
                                 <button 
                                     onClick={() => handleLike(plan.id)}

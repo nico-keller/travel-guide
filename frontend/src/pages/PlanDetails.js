@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/SharedStyles.css';
 import CommentSection from '../components/CommentSection';
+import { saveAs } from 'file-saver'; // Import file-saver for downloading files
 
 const API_BASE_URL = 'http://127.0.0.1:5000'
 const WEATHER_API_KEY = 'YOUR_API_KEY_HERE';
@@ -12,6 +13,7 @@ function PlanDetails() {
     const [plan, setPlan] = useState(null);
     const [error, setError] = useState(null);
     const [weather, setWeather] = useState(null);
+    const [startDateTime, setStartDateTime] = useState(''); // State for the start date and time
 
     useEffect(() => {
         axios.get(`${API_BASE_URL}/api/plans/${id}`)
@@ -35,6 +37,36 @@ function PlanDetails() {
                 });
         }
     }, [plan]);
+
+    const handleExportToOutlook = () => {
+        if (!startDateTime) {
+            setError('Please set a start date to export the plan.');
+            return;
+        }
+
+        let startDate = new Date(startDateTime);
+        startDate.setHours(12, 0, 0); // Default to 12 PM
+        const endDate = new Date(startDate.getTime() + plan.length * 24 * 60 * 60 * 1000);
+
+        const event = `
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Your Organization//Your Product//EN
+BEGIN:VEVENT
+UID:${plan.id}
+DTSTAMP:${startDate.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
+DTSTART:${startDate.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
+DTEND:${endDate.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
+SUMMARY:${plan.title}
+DESCRIPTION:${plan.itinerary.replace(/\n/g, '\\n')}
+LOCATION:${plan.location}
+END:VEVENT
+END:VCALENDAR
+        `;
+
+        const blob = new Blob([event], { type: 'text/calendar' });
+        saveAs(blob, 'travel-plan.ics');
+    };
 
     if (error) {
         return <div className="page-container">
@@ -66,6 +98,10 @@ function PlanDetails() {
                     <div className="info-group">
                         <label>Preferences</label>
                         <p>{plan.preferences}</p>
+                    </div>
+                    <div className="info-group">
+                        <label>Length</label>
+                        <p>{plan.length} days</p>
                     </div>
                 </div>
 
@@ -114,6 +150,22 @@ function PlanDetails() {
                     </div>
                 )}
             </div>
+
+            {plan && (
+                <div className="export-section">
+                    <label className="form-label">Start Date</label>
+                    <input
+                        type="date"
+                        className="form-input"
+                        value={startDateTime}
+                        onChange={(e) => setStartDateTime(e.target.value)}
+                    />
+                    <button className="btn" onClick={handleExportToOutlook} disabled={!startDateTime}>
+                        Export to Outlook
+                    </button>
+                </div>
+            )}
+
             <CommentSection planId={id} />
         </div>
     );

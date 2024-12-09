@@ -12,6 +12,7 @@ class TravelPlan(db.Model):
     dislikes = db.Column(db.Integer, default=0)
     location_details = db.Column(db.JSON, nullable=False)
     image_url = db.Column(db.String(100), nullable=False)
+    length = db.Column(db.Integer, nullable=False)  # New column for length in days
     comments = db.relationship('Comment', backref='travel_plan', lazy=True, cascade="all, delete-orphan")
 
 class Comment(db.Model):
