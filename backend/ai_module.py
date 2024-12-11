@@ -32,9 +32,10 @@ def generate_itinerary(title, description, location, preferences, length):
 
 def generate_image(prompt):
     try:
+        photorealistic_prompt = f"Create a photorealistic image of {prompt}."
         response = client.images.generate(
             model="dall-e-3",
-            prompt=prompt,
+            prompt=photorealistic_prompt,
             size="1024x1024",
             quality="standard",
             n=1,
@@ -68,4 +69,35 @@ def generate_loc_details(location):
     except Exception as e:
         print(e)
         return "Error generating itinerary."
+
+def generate_random_destination():
+    try:
+        prompt = (
+            "Provide a popular travel destination starting with a random letter, "
+            "along with a brief description. Respond only with a JSON object containing "
+            "the 'name' and 'description' fields without any additional text."
+        )
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a helpful travel assistant."},
+                {"role": "user", "content": prompt}
+            ]
+        )
+        destination_json = response.choices[0].message.content
+        # Extract JSON object using regex
+        import re
+        json_match = re.search(r'\{.*\}', destination_json, re.DOTALL)
+        if json_match:
+            json_str = json_match.group()
+            # Parse the JSON string into a Python dictionary
+            import json
+            destination = json.loads(json_str.strip())
+            return destination
+        else:
+            print("JSON object not found in the response.")
+            return None
+    except Exception as e:
+        print(f"Error generating random destination: {e}")
+        return None
 

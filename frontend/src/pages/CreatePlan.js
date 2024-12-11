@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom'; // Import useLocation
 import { createTravelPlan } from '../services/apiService';
 import '../styles/SharedStyles.css';
-import { saveAs } from 'file-saver'; // Import file-saver for downloading files
+import ExportToOutlook from '../components/ExportToOutlook'; // Import the new component
 
 function CreatePlan() {
     const [title, setTitle] = useState('');
@@ -14,6 +15,14 @@ function CreatePlan() {
     const [imageUrl, setImageUrl] = useState(null); // State for the generated image URL
     const [loading, setLoading] = useState(false); // State for loading
     const [startDateTime, setStartDateTime] = useState(''); // State for the start date and time
+    const query = new URLSearchParams(useLocation().search); // Get query parameters
+
+    useEffect(() => {
+        const locationParam = query.get('location');
+        if (locationParam) {
+            setLocation(locationParam);
+        }
+    }, [query]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -47,36 +56,6 @@ function CreatePlan() {
         } finally {
             setLoading(false); // Set loading to false when request completes
         }
-    };
-
-    const handleExportToOutlook = () => {
-        if (!startDateTime) {
-            setMessage('Please set a start date to export the plan.');
-            return;
-        }
-
-        let startDate = new Date(startDateTime);
-        startDate.setHours(12, 0, 0); // Default to 12 PM
-        const endDate = new Date(startDate.getTime() + createdPlan.length * 24 * 60 * 60 * 1000);
-
-        const event = `
-BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Your Organization//Your Product//EN
-BEGIN:VEVENT
-UID:${createdPlan.id}
-DTSTAMP:${startDate.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
-DTSTART:${startDate.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
-DTEND:${endDate.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
-SUMMARY:${createdPlan.title}
-DESCRIPTION:${createdPlan.itinerary.replace(/\n/g, '\\n')}
-LOCATION:${createdPlan.location}
-END:VEVENT
-END:VCALENDAR
-    `;
-
-        const blob = new Blob([event], { type: 'text/calendar' });
-        saveAs(blob, 'travel-plan.ics');
     };
 
     const renderJsonData = (data) => {
@@ -186,18 +165,7 @@ END:VCALENDAR
                             {renderJsonData(createdPlan.itinerary)}
                         </div>
                     </div>
-                    <div className="export-section">
-                        <label className="form-label">Start Date</label>
-                        <input
-                            type="date"
-                            className="form-input"
-                            value={startDateTime}
-                            onChange={(e) => setStartDateTime(e.target.value)}
-                        />
-                        <button className="btn" onClick={handleExportToOutlook} disabled={!startDateTime}>
-                            Export to Outlook
-                        </button>
-                    </div>
+                    <ExportToOutlook planId={createdPlan.id} />
                 </div>
             )}
 

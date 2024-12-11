@@ -36,6 +36,11 @@ function Navbar() {
                         ✈️ Book Flights
                     </Link>
                 </li>
+                <li>
+                    <Link to="/destination-tinder" className="nav-link">
+                        🌍 Explore Destinations
+                    </Link>
+                </li>
             </ul>
         </nav>
     );

@@ -6,6 +6,7 @@ import PlanDetails from './pages/PlanDetails';
 import CreatePlan from './pages/CreatePlan';
 import ImageGenerator from "./pages/ImageGenerator";
 import FlightSearch from './pages/FlightSearch';
+import DestinationTinder from './pages/DestinationTinder';
 import './styles/App.css';
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
                         <Route path="/create" element={<CreatePlan/>}/>
                         <Route path="/generate-image" element={<ImageGenerator />} />
                         <Route path="/search-flights" element={<FlightSearch />}/>
+                        <Route path="/destination-tinder" element={<DestinationTinder />} />
                     </Routes>
                 </main>
             </div>

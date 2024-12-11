@@ -1,10 +1,11 @@
 from flask import request, jsonify
 from models import db, TravelPlan, Comment
-from ai_module import generate_itinerary, generate_image, generate_loc_details
+from ai_module import generate_itinerary, generate_image, generate_loc_details, generate_random_destination
 from serpapi import GoogleSearch
 import os
 from dotenv import load_dotenv
-from datetime import datetime
+from datetime import datetime, timedelta
+from random import sample
 
 # Load environment variables
 load_dotenv()
@@ -231,6 +232,64 @@ def configure_routes(app):
             'author': new_comment.author,
             'created_at': new_comment.created_at.isoformat()
         }), 201
+
+    @app.route('/api/plans/<int:id>/export', methods=['POST'])
+    def export_plan_to_outlook(id):
+        try:
+            data = request.json
+            start_date_time = data.get('startDateTime')
+            if not start_date_time:
+                return jsonify({'error': 'Start date time is required'}), 400
+
+            plan = TravelPlan.query.get(id)
+            if not plan:
+                return jsonify({'error': 'Plan not found'}), 404
+
+            start_date = datetime.fromisoformat(start_date_time)
+            start_date = start_date.replace(hour=12, minute=0, second=0)
+            end_date = start_date + timedelta(days=plan.length)
+
+            event = f"""
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Your Organization//Your Product//EN
+BEGIN:VEVENT
+UID:{plan.id}
+DTSTAMP:{start_date.strftime('%Y%m%dT%H%M%SZ')}
+DTSTART:{start_date.strftime('%Y%m%dT%H%M%SZ')}
+DTEND:{end_date.strftime('%Y%m%dT%H%M%SZ')}
+SUMMARY:{plan.title}
+DESCRIPTION:{plan.itinerary.replace('\n', '\\n')}
+LOCATION:{plan.location}
+END:VEVENT
+END:VCALENDAR
+            """
+
+            return event, 200, {'Content-Type': 'text/calendar'}
+        except Exception as e:
+            app.logger.error(f"Error exporting travel plan: {e}")
+            return jsonify({'error': 'Failed to export travel plan'}), 500
+
+    @app.route('/api/random-destination', methods=['GET'])
+    def get_random_destination():
+        try:
+            # Generate one random destination using AI
+            destination = generate_random_destination()
+            if not destination:
+                return jsonify({'error': 'Failed to generate destination'}), 500
+
+            # Generate an image for the destination
+            image_prompt = f"A beautiful scene at {destination['name']}. Description: {destination['description']}"
+            destination['imageUrl'] = generate_image(image_prompt)
+
+            # Check if imageUrl is generated
+            if not destination['imageUrl']:
+                destination['imageUrl'] = 'default_image_url_or_placeholder'
+
+            return jsonify(destination), 200
+        except Exception as e:
+            app.logger.error(f"Error fetching destination: {e}")
+            return jsonify({'error': 'Failed to fetch destination'}), 500
 
 
 
